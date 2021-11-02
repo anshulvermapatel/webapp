@@ -8,6 +8,10 @@ import (
 	"os"
 )
 
+// ENV to set -
+
+// WEBAPP_IMAGE_DIR
+
 func ifErr(err error) {
 	if err != nil {
 		panic(err)
@@ -19,6 +23,7 @@ func ifErr(err error) {
 var tpl *template.Template
 
 func init() {
+	//	tpl = template.Must(template.ParseGlob("*.html"))
 	tpl = template.Must(template.ParseGlob("*.html"))
 }
 
@@ -39,8 +44,9 @@ type routeInfo struct {
 }
 
 func main() {
+	imageDir := os.Getenv("WEBAPP_IMAGE_DIR")
 	// todo change the http Dir to be programatially fetched through package 'os'
-	http.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("/home/ansverma/OLD/Anshul/Documents/Devendra/try1/"))))
+	http.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir(imageDir))))
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/fashion", http.StatusSeeOther)
 	})
@@ -72,7 +78,7 @@ func main() {
 
 	for i, h := range handlers {
 		http.HandleFunc(routesInfo[i].Route, h)
-		i++
+		//i++
 	}
 	err := http.ListenAndServe(":8080", nil)
 	ifErr(err)
